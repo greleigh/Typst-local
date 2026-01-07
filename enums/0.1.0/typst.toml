@@ -1,0 +1,7 @@
+[package]
+name = "enums"
+version = "0.1.0"
+entrypoint = "lib.typ"
+authors = ["Graham Leigh", "others"]
+license = "MIT"
+description = "Collection of functions for (non-)enumerated lists."
