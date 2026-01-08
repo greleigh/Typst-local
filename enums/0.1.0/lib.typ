@@ -4,8 +4,8 @@
 /// :resume counters
 /// :referencable labels
 ///
-#import "refenums.typ": *
-#import "resnum.typ": init as enable-resume-enums
+#import "referable.typ": *
+#import "resume.typ": init as enable-resume-enums
 #import "spacing.typ"
 
 ///

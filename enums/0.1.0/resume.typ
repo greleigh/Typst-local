@@ -8,30 +8,35 @@
 
 #let init(..options, doc) = {
   show <resume-enum>: it => { resume-enum.update(true) + it }
-  show enum.item: it => {
-    if type(it.number) == int {
-      current-enum.update(it.number)
-    } else {
-      current-enum.step()
-    }
-    it
-  }
+  // show <show-enum>: it => { it + context current-enum.get() } // Debug
+
+  
   show enum: it => {
     // determine whether to resume previous counting
     let resume = resume-enum.get()
+    let (start: s, children: items, ..args) = it.fields()
     resume-enum.update(false)
-    // set enum(start: auto)
-    if type(it.start) == int or resume != true {
+    if type(s) == int {
+      // Override if `enum.start` is specified
+      current-enum.update(s) 
+      it
+    } else if resume != true {
+      current-enum.update(1)
       it
     } else {
       // start == auto && resume == true
-      let args = it.fields()
-      let (start: os, children: items, ..args) = it.fields()
-      let new-start = current-enum.get().first() + 1
-      // current-enum.update(0) // why does this matter?
+      let new-start = current-enum.get().first()
       enum(..args, start: new-start, ..items)
     }
-    current-enum.update(0) // why does this matter?
+  }
+
+  show enum.item: it => {
+    it
+    if type(it.number) == int {
+      current-enum.update(it.number + 1)
+    } else {
+      current-enum.step()
+    }
   }
   doc
 }

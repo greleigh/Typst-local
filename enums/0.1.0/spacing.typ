@@ -3,26 +3,24 @@
 
 #let update-value(new) = block-in-paragraph.update(((v, d)) => (new, d))
 
-#let space-after-block() = {
+#let space-after-block(it) = {
   context {
     let (toggle, _) = block-in-paragraph.get()
-    if toggle == none {
-      toggle = true
-    }
+    it
+    update-value(none)
     if toggle == none {} else if toggle {
       v(par.leading, weak: true)
     } else {
       v(par.spacing, weak: true)
     }
   }
-  update-value(none)
 }
 
 #let init(default: none, doc) = {
   block-in-paragraph.update((none, default))
 
   /// New show rules for `enum`, `list` and `terms`
-  show selector(enum).or(list).or(terms): it => { it + space-after-block() }
+  show selector(enum).or(list).or(terms): space-after-block
 
   doc
 }
