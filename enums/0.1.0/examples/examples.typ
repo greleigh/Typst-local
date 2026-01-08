@@ -37,3 +37,22 @@ Now resume the parent <resume-enum>
 
 
 = Spacing
+
+- By default, lists, etc. are separated
+- below by paragraph spacing.
+
+This paragraph is not tight against the list above. Next is a equation
+$
+  a=b
+$ 
+followed by text. #lorem(20)
+
+#show: init.with(post-spacing: false,include-equations:true)
+
+- A list
+- Which is tight against the next paragraph
+Next paragraph is tight against list. Next is a equation
+$
+  a=b
+$ 
+followed by text. #lorem(20)

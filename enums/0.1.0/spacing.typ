@@ -1,26 +1,34 @@
 /// Override new paragraphs after lists, etc. Insert label <no-par>
-#let block-in-paragraph = state("block-in-paragraph", (none, none))
+#let enum-spacing = state("__enum-spacing", (none, none))
 
-#let update-value(new) = block-in-paragraph.update(((v, d)) => (new, d))
+#let update-value(new) = enum-spacing.update(((v, d)) => (new, d))
 
-#let space-after-block(it) = {
-  context {
-    let (toggle, _) = block-in-paragraph.get()
-    it
-    update-value(none)
-    if toggle == none {} else if toggle {
-      v(par.leading, weak: true)
-    } else {
-      v(par.spacing, weak: true)
+
+#let init(default: none, equations: false, doc) = {
+  let space-after-enum() = {
+    context {
+      let (c, d) = enum-spacing.get()
+      if c == none {
+        c = d
+      }
+      update-value(none)
+      if c == none {} else if c {
+        v(par.spacing, weak: true)
+      } else {
+        v(par.leading, weak: true)
+      }
     }
   }
-}
-
-#let init(default: none, doc) = {
-  block-in-paragraph.update((none, default))
+  enum-spacing.update((none, default))
 
   /// New show rules for `enum`, `list` and `terms`
-  show selector(enum).or(list).or(terms): space-after-block
+  show selector(enum).or(list).or(terms): it => it + space-after-enum()
+
+  show math.equation: it => {
+    if equations {
+      space-after-enum() + it + space-after-enum()
+    } else {it}
+  }
 
   doc
 }
