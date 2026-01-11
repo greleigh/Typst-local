@@ -15,13 +15,19 @@
 /// - ref-numbering ():
 /// - doc ():
 /// ->
-#let init(..options, post-spacing: none, include-equations: false, ref-numbering: "1.1", doc) = {
+#let init(..options, tight-spacing: none, include-equations: false, ref-numbering: "1.1", doc) = {
   show: enable-referable-enums
   show: enable-resume-enums.with(ref-numbering: ref-numbering)
 
-  show: spacing.init.with(default: post-spacing, equations: include-equations)
+  let tight-eqs = if tight-spacing == true {include-equations} else {false}
+
+  show: spacing.init.with(default: tight-spacing, equations: tight-eqs)
   show <no-par>: it => { it + spacing.update-value(true) }
-  show <end-par>: it => { it + spacing.update-value(false) }
+  show <end-par>: it => { 
+    spacing.next-block-space.update(true)
+    let (body: body, label: l, ..fields) = it.fields()
+    math.equation(..fields, body)
+    }
 
   doc
 }

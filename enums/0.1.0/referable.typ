@@ -121,10 +121,9 @@
   if numbering == auto and refnumbering == auto {
     thenumbering = enum.numbering
     // refnumbering to be inferred
-  }
-  if numbering == auto and refnumbering != auto {
-    thenumbering = (..num) => std.numbering(refnumbering, ..num)
-  }
+  } else if numbering == auto and refnumbering != auto {
+    thenumbering = (..num) => std.numbering(refnumbering, ..num) + "."
+  } 
   if refnumbering == auto {
     therefnumbering = _refnumering-referable-enum.get()
     // // infer suitable refnumbering if needed
